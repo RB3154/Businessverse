@@ -1,0 +1,191 @@
+/* Scene transitions (SceneManager) — transform/opacity only. */
+.scene-entering { animation: scene-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.scene-leaving { animation: scene-out-zoom 0.9s cubic-bezier(0.7, 0, 0.84, 0) forwards; pointer-events: none; }
+.scene-leaving[data-exit='fade'] { animation-name: scene-out-fade; animation-timing-function: ease; }
+.scene-leaving[data-dir='-1'] { animation-name: scene-out-back; }
+
+@keyframes scene-in { from { opacity: 0; } }
+@keyframes scene-out-fade { to { opacity: 0; } }
+@keyframes scene-out-zoom { to { opacity: 0; transform: scale(1.08); } }
+@keyframes scene-out-back { to { opacity: 0; transform: scale(0.94); } }
+
+/* Pausing the presentation freezes looping CSS animations too. */
+.is-paused .anim-loop,
+.is-paused .type-cursor { animation-play-state: paused; }
+
+/* Beats start hidden; the timeline reveals them. */
+.beat {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+
+.camera { transform-origin: 50% 50%; }
+
+.spot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1500px;
+  height: 900px;
+  margin: -450px 0 0 -750px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(118, 87, 246, 0.22), color-mix(in srgb, var(--brand-ims-blue) 10%, transparent) 55%, transparent);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.flash {
+  position: absolute;
+  inset: -200px;
+  background: radial-gradient(circle at 50% 45%, #fff 0%, rgba(167, 139, 250, 0.6) 30%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- Glitch (RGB split) ---------- */
+.glitch { position: relative; }
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+.glitch.is-glitching::before {
+  opacity: 0.9;
+  color: var(--color-neon);
+  animation: glitch-a 0.36s steps(2, end) both;
+}
+.glitch.is-glitching::after {
+  opacity: 0.9;
+  color: var(--color-violet);
+  animation: glitch-b 0.36s steps(2, end) both;
+}
+.text-gradient-brand.glitch::before,
+.text-gradient-brand.glitch::after {
+  background: none;
+}
+@keyframes glitch-a {
+  0% { clip-path: inset(8% 0 62% 0); transform: translate(-10px, 0); }
+  25% { clip-path: inset(48% 0 22% 0); transform: translate(9px, 0); }
+  50% { clip-path: inset(28% 0 44% 0); transform: translate(-6px, 0); }
+  75% { clip-path: inset(72% 0 4% 0); transform: translate(7px, 0); }
+  100% { clip-path: inset(0 0 100% 0); transform: none; }
+}
+@keyframes glitch-b {
+  0% { clip-path: inset(60% 0 12% 0); transform: translate(10px, 0); }
+  25% { clip-path: inset(14% 0 64% 0); transform: translate(-9px, 0); }
+  50% { clip-path: inset(40% 0 30% 0); transform: translate(6px, 0); }
+  75% { clip-path: inset(2% 0 80% 0); transform: translate(-7px, 0); }
+  100% { clip-path: inset(100% 0 0 0); transform: none; }
+}
+
+/* ---------- Portal ---------- */
+.portal-wrap {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 0;
+  height: 0;
+}
+.portal {
+  position: absolute;
+  width: 640px;
+  height: 640px;
+  left: -320px;
+  top: -320px;
+  opacity: 0;
+}
+.portal-glow {
+  position: absolute;
+  inset: -180px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(118, 87, 246, 0.55), color-mix(in srgb, var(--brand-ims-blue) 28%, transparent) 50%, transparent 74%);
+}
+.portal-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, var(--color-violet) 70deg, var(--color-neon) 140deg, var(--brand-ims-blue) 190deg, transparent 250deg, var(--color-lavender) 310deg, transparent 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+  animation: spin 7s linear infinite;
+}
+.portal-ring.r2 { inset: 48px; opacity: 0.8; animation-duration: 10s; animation-direction: reverse; }
+.portal-ring.r3 { inset: 112px; opacity: 0.6; animation-duration: 5s; }
+.portal-dash {
+  position: absolute;
+  inset: 22px;
+  border-radius: 50%;
+  border: 2px dashed rgba(245, 245, 250, 0.22);
+  animation: spin 40s linear infinite;
+}
+.portal-core {
+  position: absolute;
+  inset: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, var(--color-neon) 10%, var(--color-violet) 34%, #1a1446 64%, #0b0f24 100%);
+  box-shadow: 0 0 90px rgba(34, 185, 242, 0.55), inset 0 0 80px rgba(8, 13, 27, 0.9);
+  animation: core-pulse 3.2s ease-in-out infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes core-pulse { 50% { transform: scale(1.05); } }
+
+/* ---------- Digital horizon ---------- */
+.floor-wrap { position: absolute; inset: 0; visibility: hidden; pointer-events: none; }
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 720px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-neon) 30%, #fff 50%, var(--color-violet) 70%, transparent);
+  box-shadow: 0 0 40px rgba(34, 185, 242, 0.7);
+}
+.grid-floor {
+  position: absolute;
+  left: -40%;
+  right: -40%;
+  top: 720px;
+  height: 560px;
+  overflow: hidden;
+  transform-origin: 50% 0;
+  transform: perspective(520px) rotateX(70deg);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 60%, transparent 100%);
+}
+.grid-plane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -96px;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(34, 185, 242, 0.45) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(118, 87, 246, 0.4) 2px, transparent 2px);
+  background-size: 96px 96px;
+  animation: grid-move 3s linear infinite;
+}
+@keyframes grid-move { to { transform: translateY(96px); } }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .scene-entering { animation-duration: 0.4s; }
+  .scene-leaving,
+  .scene-leaving[data-dir='-1'] { animation: scene-out-fade 0.4s ease forwards; }
+  .portal-ring,
+  .portal-dash,
+  .portal-core,
+  .grid-plane { animation: none; }
+}

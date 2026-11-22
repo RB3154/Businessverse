@@ -1,0 +1,142 @@
+/* ---------- ACT 02 · The Businessverse ---------- */
+.universe { position: absolute; inset: 0; }
+.universe-canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; display: block; }
+
+.world-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 600 22px/1 var(--font-display);
+  letter-spacing: 0.24em;
+  color: rgba(245, 245, 250, 0.88);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.universe.show-labels .world-label { opacity: 1; transition-delay: 1.4s; }
+.world-label-index { font-size: 16px; letter-spacing: 0.1em; }
+
+.fallback-universe { position: absolute; inset: 0; }
+.fallback-orb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 70%, white) 0%, var(--accent) 22%, color-mix(in srgb, var(--accent) 25%, #050814) 70%);
+  box-shadow: 0 0 60px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+  transition: transform 1.4s cubic-bezier(0.65, 0, 0.35, 1), opacity 1s ease;
+}
+
+.bv-overview {
+  position: absolute;
+  inset: 110px 0 auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  visibility: hidden;
+}
+.bv-overview-title {
+  font: 700 84px/1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.corner-brand { position: absolute; top: 34px; right: 104px; }
+
+.world-panel {
+  position: absolute;
+  left: 1010px;
+  top: 170px;
+  width: 800px;
+  visibility: hidden;
+}
+.wp-tag {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font: 600 20px/1 var(--font-display);
+  letter-spacing: 0.26em;
+  color: rgba(245, 245, 250, 0.6);
+}
+.wp-domain { color: var(--accent); }
+.wp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.wp-title {
+  margin: 26px 0 0;
+  display: flex;
+  flex-direction: column;
+  font: 700 96px/1.02 var(--font-display);
+  letter-spacing: -0.035em;
+  color: var(--color-offwhite);
+}
+.wp-title-accent { color: var(--accent); }
+.wp-quote {
+  margin: 34px 0 0;
+  font: 400 30px/1.42 var(--font-sans);
+  color: rgba(245, 245, 250, 0.8);
+  max-width: 760px;
+}
+.wp-careers {
+  list-style: none;
+  margin: 44px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.wp-career { display: flex; gap: 24px; align-items: stretch; }
+.wp-career-line {
+  flex: none;
+  width: 4px;
+  border-radius: 4px;
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent);
+  transform-origin: top;
+}
+.wp-career-name {
+  display: block;
+  font: 600 34px/1.15 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--color-offwhite);
+}
+.wp-career-explain {
+  display: block;
+  margin-top: 6px;
+  font: 400 25px/1.35 var(--font-sans);
+  color: rgba(245, 245, 250, 0.68);
+}
+
+.bv-closing-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 32% at 50% 33%, rgba(8, 13, 27, 0.75), rgba(8, 13, 27, 0.25) 70%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.bv-closing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 210px;
+  gap: 10px;
+  visibility: hidden;
+}
+.bv-closing-1 { font: 700 170px/1 var(--font-display); letter-spacing: -0.045em; }
+.bv-closing-2 { font: 700 108px/1.05 var(--font-display); letter-spacing: -0.035em; }
+
+/* Keeps world copy legible over the 3D scene. */
+.bv-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 38%, rgba(8, 13, 27, 0.72) 54%, rgba(8, 13, 27, 0.88) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
