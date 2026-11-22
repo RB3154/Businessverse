@@ -8,11 +8,12 @@ An immersive, presenter-controlled career discovery experience for **IMS Vadodar
 
 | Act | Title | What happens |
 | --- | --- | --- |
-| 01 | The Reality Check | Kinetic typography from "CLASS 11." to "YOUR STREAM IS NOT YOUR CEILING.", then a portal into the Businessverse. Plays on its own. |
-| 02 | Enter the Businessverse | A 3D universe of five career worlds — Finance, Strategy, Marketing, Innovation, Technology — revealed one by one. |
-| 03 | The Boardroom Challenge | A hypothetical ₹10,00,000 startup: three options, a 15-second countdown, a hand vote, every consequence, then who makes these decisions. |
-| 04 | The Unlocked Path | Class 11 & 12 → undergraduation → CAT → MBA → careers, unlocking stage by stage, then where IMS comes in. |
-| 05 | The IMS Reveal | The pathway converges into light, the official IMS logo is revealed, and the final screen holds for the seminar hand-over. |
+| 01 | The Reality Check | "BE HONEST. When someone says COMMERCE... what comes to mind?" then CA, B.COM, ACCOUNTING, MBA, a red **WAIT.**, and the business machine behind a food order. Plays by itself (~30 s). |
+| 02 | Guess the Business | Game-show rounds: a mystery brand from three clues (Amul) and what makes it work; then the ₹199 food order and everything an app must worry about, each tied to a job. |
+| 03 | You Are the CEO | The centrepiece. SNACKRUSH (fictional) has ₹10 lakh and 30 days. The room splits into **Team A: Growth** and **Team B: Survival**, debates, votes, locks a decision and watches the dashboard react; then breaking news (a competitor cuts prices by 30%) forces a second decision. Ends with who really makes these calls. |
+| 04 | The Career Reveal | Five scenarios ("Who do you call?") then the reveal: consultant, brand manager, financial analyst, product manager, entrepreneur, each with its own look. |
+| 05 | Would You Rather? | Four split-screen hand votes (₹1 crore salary or build a ₹100 crore company?...) and the business thinking behind each side. |
+| 06 | The Next Move | A quick pathway (Class 11-12, degree, skills, management prep, MBA, careers; CAT as one route), where IMS comes in, then: "Your stream is not your ceiling. Your future is not pre-decided. Your next move starts with curiosity." and the IMS logo. Plays by itself and holds. |
 
 ---
 
@@ -27,25 +28,22 @@ An immersive, presenter-controlled career discovery experience for **IMS Vadodar
 | --- | --- |
 | → / Page Down | Next beat or scene |
 | ← / Page Up | Previous beat or scene (lands on the previous scene's last beat) |
-| Space | Pause / resume (also pauses the Boardroom countdown) |
+| Space | Pause / resume (also pauses the Act 03 countdown) |
 | F | Fullscreen |
 | M | Sound on / off |
 | R | Restart from the beginning |
 | ? or H | Show the shortcut panel |
 | Esc | Close the panel / exit fullscreen |
-| 1 / 2 / 3 (or A / B / C) | Boardroom only: record the class vote |
+| 1 / 2 / 3 | Act 03: lock the class decision · Act 05: 1 / 2 picks the room's side |
 
 On-screen controls and the cursor hide after ~2.6 s without mouse movement; move the mouse to bring them back. Clicking an act on the bottom timeline jumps to the start of that act.
 
 ### What runs by itself and what waits for you
 
-- **Act 01** plays through and hands over to Act 02 on its own (→ skips ahead beat by beat).
-- **Act 02** waits for you. The planets arrive one by one and the camera keeps drifting, but each → flies to the next world. (Set `universeTiming.autoAdvance` to `true` in `presentation.config.ts` to make the worlds move on by themselves.)
-- **Act 03 never moves on by itself.** Steps: welcome → brief → options → **countdown** → hand vote → outcome A → B → C → "No single right answer" → who makes these decisions → Continue.
-  - Click **Start 15-second countdown** (or →). When it hits zero it shows *Hands up!* and **waits**; pressing → during the countdown ends it early.
-  - Record the winning option by clicking its card or pressing **1 / 2 / 3**. It stays highlighted through the outcomes. No option is ever presented as the correct one.
-- **Act 04** plays by itself: the opening question, each of the five stages and the IMS beat stay on screen for 10 seconds (a thin line under the title shows time left), then it flows straight into Act 05. Press → to move on sooner, Space to hold. Change the pace with `pathwayTiming.stepSec`, or set `pathwayTiming.autoAdvance` to `false` to step through it manually.
-- **Act 05** plays through and **holds on the final screen** until you press R or close the window.
+- **Act 01** plays by itself (~30 s) and hands over to Act 02. It pauses ~3 s after "What comes to mind?" so the room can shout answers.
+- **Acts 02, 04 and 05** wait for →: each press reveals the next clue, answer or question. In Act 05, click a side or press **1 / 2** to record which side the room picked.
+- **Act 03 never moves on by itself.** For each decision: → starts the countdown, → again ends it early (Space pauses it), then tap **TEAM A / TEAM B** on each team's pick and press **1 / 2 / 3** to lock the class decision. → will not continue until a decision is locked. ← always steps back (a locked choice is kept), so an accidental press is easy to undo.
+- **Act 06** plays by itself (6 s per pathway stage; change with `pathwayTiming`) and **holds on the final screen** until you press R or close the window.
 
 ---
 
@@ -53,14 +51,14 @@ On-screen controls and the cursor hide after ~2.6 s without mouse movement; move
 
 | File | What it controls |
 | --- | --- |
-| `src/config/presentation.config.ts` | Scene order and durations, autoplay on/off, Act 02 and Act 04 pacing (`universeTiming`, `pathwayTiming`), audio levels, all Act 01 text, Act 05 closing messages. |
-| `src/data/careerWorlds.ts` | The five career worlds: titles, quotes, careers and their plain-language explanations, colours. |
-| `src/data/businessScenario.ts` | The Boardroom: funds, the three options, countdown length, consequences, lessons, roles. |
-| `src/data/pathway.ts` | The five pathway stages (CAT/MBA wording) and the IMS connection copy. |
+| `src/config/presentation.config.ts` | Scene order and durations, autoplay, Act 01 text, Act 06 pacing (`pathwayTiming`) and closing lines, audio levels. |
+| `src/data/experience.ts` | Act 02 (brand clues, answer, functions, the ₹199 order), Act 04 (career scenarios and explanations), Act 05 (Would You Rather questions and insights). |
+| `src/data/businessScenario.ts` | Act 03: the company, teams, both decisions, dashboard effects, headlines, trade-offs, the twist and the roles. All figures are fictional. |
+| `src/data/pathway.ts` | Act 06 pathway stages (CAT/MBA wording) and the IMS connection copy. |
 | `src/config/branding.config.ts` | IMS logo path, brand colours, institutional description, optional Vadodara centre details. |
 | `public/assets/branding/ims-logo.svg` | The official IMS logo. Replace this file to change it. |
 
-Set `presentationSettings.autoplay = false` to make every beat — including Act 01 — wait for the presenter.
+Brands (Amul, Zomato, Swiggy) appear only as names in examples: no logos, no statistics, only broad well-known facts.
 
 ### Branding notes
 
@@ -92,14 +90,13 @@ Copy the whole folder (including `node_modules`, or run `npm install` once while
 
 ### How it's built
 
-- **React 18 + Vite + TypeScript**, Tailwind CSS v4 plus hand-written CSS, **GSAP** timelines, **three.js** (Act 02), Lucide icons.
+- **React 18 + Vite + TypeScript**, Tailwind CSS v4 plus hand-written CSS, **GSAP** timelines, Lucide icons.
 - **Fixed 1920×1080 stage**, scaled to fit the display: layout and type are identical at 1366×768, 1600×900, 1920×1080 and 2560×1440. Nothing reflows and nothing clips.
 - `PresentationController` holds the show state (scene, pause, sound, fullscreen, help). `SceneManager` overlaps the outgoing and incoming scenes so transitions are continuous.
-- `useSceneTimeline` gives Acts 01, 02, 04 and 05 a GSAP master timeline with beats (arrow keys jump between them), hold points that wait for the presenter, pause/resume and auto-advance. Anything that must survive jumping (background mood, 3D camera focus) is derived from the playhead.
-- Act 03 is a small step state machine (`BoardroomScene`); its countdown runs on wall-clock time and pauses with the show.
-- Act 02's universe is vanilla three.js in a separate, lazily-loaded chunk that is prefetched during Act 01. Without WebGL it automatically falls back to a CSS rendition of the same worlds.
+- Cinematic acts (01, 06) use `useSceneTimeline`: a GSAP master timeline with beats, holds, pause/resume and auto-advance. Interactive acts (02-05) use `useStepScene`: discrete presenter-led steps with reliable ← / → and recovery. Act 03's countdown runs on wall-clock time and pauses with the show.
+- Each act has its own art direction (black editorial, cream game show, control room, per-career looks, split screens) instead of one repeated look.
 - One persistent particle canvas (`BackgroundEffects`) carries the atmosphere across all acts.
-- **Sound** is original and synthesised live with the Web Audio API (`src/utils/audioEngine.ts`): an ambient pad plus impact, tick, pop, glitch, whoosh, rise and reveal effects, voiced in the mid range so laptop speakers and projectors can actually play them, with a compressor on the master. No audio files and no streaming. Nothing plays until the presenter starts with sound (browsers only allow audio after a click or key press), and nothing depends on it.
+- **Sound** is original and synthesised live with the Web Audio API (`src/utils/audioEngine.ts`): an ambient pad plus impact, tick, pop, glitch, whoosh, rise, reveal, breaking-news alert, decision confirm, record scratch, ding and drumroll cues, voiced in the mid range so laptop speakers and projectors can actually play them, with a compressor on the master. No audio files and no streaming. Nothing plays until the presenter starts with sound (browsers only allow audio after a click or key press), and nothing depends on it.
 - **Fonts**: Space Grotesk and Inter variable fonts (SIL Open Font License), Latin + Latin-Extended subsets only (Latin-Extended carries ₹), in `public/assets/fonts/` and preloaded.
 - **Reduced motion**: with the OS "reduce motion" setting on, kinetic movement becomes simple fades and looping motion stops.
 
@@ -107,15 +104,15 @@ Copy the whole folder (including `node_modules`, or run `npm install` once while
 src/
   App.tsx, main.tsx
   config/        presentation.config.ts, branding.config.ts
-  data/          careerWorlds.ts, businessScenario.ts, pathway.ts
-  scenes/        IntroScene, PortalScene, BusinessverseScene, BoardroomScene, CareerPathScene, IMSRevealScene
+  data/          experience.ts, businessScenario.ts, pathway.ts
+  scenes/        IntroScene, GuessScene, CeoScene, CareersScene, WouldYouRatherScene, CareerPathScene, IMSRevealScene
   components/
     presentation/  PresentationController, SceneManager, Stage, PresentationControls, ProgressIndicator, ShortcutsOverlay
     shared/        AnimatedText, BackgroundEffects, HudFrame, IMSLogo
-    intro/  businessverse/  boardroom/  pathway/
-  hooks/         usePresentation, useSceneTimeline, useKeyboardControls, useReducedMotion
-  utils/         audioEngine, motion, stores, fullscreen, timing, webgl
-  styles/        globals, fonts, typography, animations, businessverse, boardroom, pathway
+    intro/  ceo/  pathway/
+  hooks/         usePresentation, useSceneTimeline, useStepScene, useEntrance, useKeyboardControls, useReducedMotion
+  utils/         audioEngine, motion, stores, fullscreen, timing
+  styles/        globals, fonts, typography, animations, experience, pathway
 public/assets/   branding/ims-logo.svg, fonts/
 ```
 

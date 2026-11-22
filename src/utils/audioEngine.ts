@@ -11,7 +11,19 @@ import { audioSettings } from '../config/presentation.config';
  * keeps everything loud enough to hear but never harsh.
  */
 
-export type Sfx = 'impact' | 'tick' | 'glitch' | 'whoosh' | 'rise' | 'reveal' | 'pop';
+export type Sfx =
+  | 'impact'
+  | 'tick'
+  | 'glitch'
+  | 'whoosh'
+  | 'rise'
+  | 'reveal'
+  | 'pop'
+  | 'alert'
+  | 'confirm'
+  | 'scratch'
+  | 'ding'
+  | 'drumroll';
 
 class AudioEngine {
   private ctx: AudioContext | null = null;
@@ -222,6 +234,53 @@ class AudioEngine {
           osc.connect(lp).connect(g).connect(out);
           osc.start(t);
           osc.stop(t + dur + 0.2);
+          break;
+        }
+        case 'alert': {
+          // Breaking-news sting: two urgent two-tone beeps.
+          [0, 0.32].forEach((o) => {
+            this.tone('square', 988, 988, t + o, 0.16, 0.005, 0.13);
+            this.tone('square', 740, 740, t + o + 0.15, 0.16, 0.005, 0.13);
+          });
+          this.burst(t, 'bandpass', 2500, 1, 0.2, 0.08);
+          break;
+        }
+        case 'confirm': {
+          // Decision locked in: a confident rising pair.
+          this.tone('triangle', 523.25, 523.25, t, 0.35, 0.005, 0.18);
+          this.tone('triangle', 783.99, 783.99, t + 0.11, 0.4, 0.005, 0.35);
+          this.tone('sine', 1567.98, 1567.98, t + 0.11, 0.08, 0.005, 0.3);
+          break;
+        }
+        case 'ding': {
+          // Answer reveal: a bright bell.
+          this.tone('sine', 1318.5, 1318.5, t, 0.32, 0.003, 0.9);
+          this.tone('sine', 2637, 2637, t, 0.08, 0.003, 0.5);
+          break;
+        }
+        case 'scratch': {
+          // Record scratch for the interruption.
+          const n = this.noiseSource();
+          const bp = ctx.createBiquadFilter();
+          bp.type = 'bandpass';
+          bp.Q.value = 6;
+          bp.frequency.setValueAtTime(2600, t);
+          bp.frequency.exponentialRampToValueAtTime(500, t + 0.18);
+          bp.frequency.exponentialRampToValueAtTime(1800, t + 0.32);
+          const g = ctx.createGain();
+          this.env(g, t, 0.9, 0.01, 0.34);
+          n.connect(bp).connect(g).connect(out);
+          n.start(t);
+          n.stop(t + 0.4);
+          break;
+        }
+        case 'drumroll': {
+          // Suspense before a reveal: quickening snare taps.
+          let at = 0;
+          for (let i = 0; i < 18; i++) {
+            this.burst(t + at, 'bandpass', 1800, 1.2, 0.18 + i * 0.012, 0.05);
+            at += Math.max(0.045, 0.11 - i * 0.004);
+          }
           break;
         }
         case 'reveal': {

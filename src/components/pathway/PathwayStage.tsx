@@ -1,9 +1,10 @@
-import { Briefcase, ClipboardCheck, GraduationCap, Landmark, School } from 'lucide-react';
+import { Briefcase, ClipboardCheck, GraduationCap, Landmark, School, Sparkles } from 'lucide-react';
 import type { PathwayStage as Stage, StageIcon } from '../../data/pathway';
 
 export const STAGE_ICONS: Record<StageIcon, typeof School> = {
   school: School,
   degree: GraduationCap,
+  skills: Sparkles,
   exam: ClipboardCheck,
   mba: Landmark,
   career: Briefcase,
@@ -30,18 +31,6 @@ export function PathwayStage({ stage, index }: { stage: Stage; index: number }) 
             {line}
           </p>
         ))}
-        {stage.chips && (
-          <div className="pw-chips-wrap">
-            {stage.chipsLabel && <span className="pw-chips-label">{stage.chipsLabel}</span>}
-            <div className={`pw-chips ${stage.chips.length <= 3 ? 'is-wide' : ''}`}>
-              {stage.chips.map((c) => (
-                <span key={c} className="pw-chip">
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
         {stage.note && <p className="pw-note">{stage.note}</p>}
       </div>
     </div>

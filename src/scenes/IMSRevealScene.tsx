@@ -7,9 +7,9 @@ import { NODE_X, PATH_Y } from '../components/pathway/pathLayout';
 import { charsIn, sfx } from '../utils/motion';
 
 /**
- * ACT 05 — The IMS Reveal. The pathway converges into one point of light,
- * which becomes the white plate the official logo sits on. Plays through on
- * its own and holds on the final screen until the presenter moves on.
+ * ACT 06 finale. The pathway converges into a point of light, the three
+ * closing lines land, and the official IMS logo is revealed. Plays by itself
+ * and holds on the final screen until the presenter moves on.
  */
 export function IMSRevealScene(_props: { def: SceneDef }) {
   const { scope } = useSceneTimeline('reveal', (tl, { reducedMotion: rm, beats, background }) => {
@@ -23,89 +23,72 @@ export function IMSRevealScene(_props: { def: SceneDef }) {
 
     background(0, 'void');
 
-    /* The pathway converges. */
+    /* The pathway converges into one point of light. */
     mark('converge', 0);
-    tl.to($$('.rv-node'), { left: 960, top: 540, scale: 0.3, duration: rm ? 0.01 : 1.5, ease: 'power3.inOut', stagger: 0.04 }, 0.2);
-    tl.to($('.rv-track'), { scaleX: 0, duration: rm ? 0.01 : 1.4, ease: 'power3.inOut' }, 0.2);
-    tl.to($$('.rv-node'), { autoAlpha: 0, duration: 0.3 }, 1.6);
-    tl.fromTo($('.rv-point'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'back.out(3)' }, 1.5);
-    sfx(tl, 'impact', 1.6);
-    tl.to($('.rv-point'), { top: 330, duration: rm ? 0.01 : 1.4, ease: 'power3.inOut' }, 2.4);
+    tl.to($$('.rv-node'), { left: 960, top: 540, scale: 0.3, duration: rm ? 0.01 : 1.3, ease: 'power3.inOut', stagger: 0.03 }, 0.15);
+    tl.to($('.rv-track'), { scaleX: 0, duration: rm ? 0.01 : 1.2, ease: 'power3.inOut' }, 0.15);
+    tl.to($$('.rv-node'), { autoAlpha: 0, duration: 0.25 }, 1.35);
+    tl.fromTo($('.rv-point'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(3)' }, 1.3);
+    sfx(tl, 'impact', 1.35);
+    tl.to($('.rv-point'), { top: 250, duration: rm ? 0.01 : 1, ease: 'power3.inOut' }, 1.9);
 
-    /* The future isn't something you wait for… */
-    tl.set($('.rv-line-1'), { autoAlpha: 1 }, 2.9);
-    charsIn(tl, $('.rv-line-1'), 3, rm, 0.025);
-    mark('prepare', 6.4);
-    tl.set($('.rv-line-2'), { autoAlpha: 1 }, 6.4);
-    charsIn(tl, $('.rv-line-2'), 6.5, rm, 0.025);
-    sfx(tl, 'impact', 6.7);
+    /* The three closing lines. */
+    const lines = $$('.rv-close');
+    const starts = [2.4, 4.6, 6.8];
+    lines.forEach((line, i) => {
+      if (i === 1) mark('lines', starts[i]);
+      tl.set(line, { autoAlpha: 1 }, starts[i]);
+      charsIn(tl, line, starts[i], rm, 0.02);
+      sfx(tl, 'impact', starts[i] + 0.2);
+    });
 
     /* The point of light becomes the logo plate. */
-    const tLogo = 10.5;
+    const tLogo = 10.2;
     mark('logo', tLogo);
-    tl.to($$('.rv-line-1, .rv-line-2'), { autoAlpha: 0, y: rm ? 0 : -30, duration: 0.6, ease: 'power2.in' }, tLogo);
-    tl.to($('.rv-point'), { top: 470, duration: rm ? 0.01 : 0.9, ease: 'power2.inOut' }, tLogo + 0.2);
-    sfx(tl, 'rise', tLogo);
-    tl.to($('.rv-point'), { scale: 9, autoAlpha: 0, duration: rm ? 0.01 : 1, ease: 'power2.in' }, tLogo + 1);
-    tl.fromTo($('.rv-flash'), { opacity: 0 }, { keyframes: rm ? [{ opacity: 0 }] : [{ opacity: 0.7, duration: 0.1 }, { opacity: 0, duration: 1.2 }] }, tLogo + 1.8);
+    tl.to($('.rv-closing'), { y: rm ? 0 : 150, scale: rm ? 1 : 0.72, autoAlpha: 0.85, duration: 1, ease: 'power3.inOut' }, tLogo);
+    tl.to($('.rv-point'), { top: 330, scale: 7, autoAlpha: 0, duration: rm ? 0.01 : 0.9, ease: 'power2.in' }, tLogo);
+    tl.fromTo($('.rv-flash'), { opacity: 0 }, { keyframes: rm ? [{ opacity: 0 }] : [{ opacity: 0.6, duration: 0.1 }, { opacity: 0, duration: 1.1 }] }, tLogo + 0.8);
     tl.fromTo(
       $('.rv-logo'),
       { autoAlpha: 0, scale: rm ? 1 : 0.2, filter: rm ? 'none' : 'blur(20px)' },
-      { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 1.4, ease: 'expo.out' },
-      tLogo + 1.8,
+      { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out' },
+      tLogo + 0.8,
     );
-    tl.fromTo($$('.rv-halo'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 2, stagger: 0.2, ease: 'power2.out' }, tLogo + 1.9);
-    sfx(tl, 'reveal', tLogo + 1.8);
-
-    /* Explore. Learn. Prepare. Grow. */
-    const tWords = tLogo + 4.5;
-    mark('words', tWords);
-    tl.fromTo($$('.rv-word'), { autoAlpha: 0, y: rm ? 0 : 24 }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.55, ease: 'power3.out' }, tWords);
-    $$('.rv-word').forEach((_, i) => sfx(tl, 'tick', tWords + i * 0.55));
+    tl.fromTo($$('.rv-halo'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.8, stagger: 0.2, ease: 'power2.out' }, tLogo + 0.9);
+    sfx(tl, 'reveal', tLogo + 0.8);
 
     /* Final screen — holds until the presenter moves on. */
-    const tFinal = tWords + 5;
-    mark('final', tFinal);
-    tl.to($('.rv-words'), { autoAlpha: 0, duration: 0.5 }, tFinal);
-    tl.to($('.rv-logo-wrap'), { y: rm ? 0 : -150, scale: rm ? 1 : 0.72, duration: 1.2, ease: 'power3.inOut' }, tFinal + 0.2);
-    tl.set($('.rv-journey'), { autoAlpha: 1 }, tFinal + 1);
-    charsIn(tl, $('.rv-journey'), tFinal + 1.1, rm, 0.02);
-    tl.fromTo($('.rv-presented'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8 }, tFinal + 2.4);
+    mark('final', tLogo + 2.4);
+    tl.fromTo($('.rv-presented'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8 }, tLogo + 2.4);
     const centreEl = root.querySelector('.rv-centre');
-    if (centreEl) tl.fromTo(centreEl, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, tFinal + 2.8);
-    tl.to({}, { duration: 0.01 }, tFinal + 3.5);
+    if (centreEl) tl.fromTo(centreEl, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, tLogo + 2.8);
+    tl.to({}, { duration: 0.01 }, tLogo + 3.5);
   });
 
   const centre = branding.vadodaraCentre;
 
   return (
     <div ref={scope} className="scene rv-scene">
-      <span className="rv-track" style={{ top: PATH_Y - 2, left: NODE_X[0], width: NODE_X[4] - NODE_X[0] }} />
+      <span className="rv-track" style={{ top: PATH_Y - 2, left: NODE_X[0], width: NODE_X[NODE_X.length - 1] - NODE_X[0] }} />
       {NODE_X.map((x) => (
         <span key={x} className="rv-node" style={{ left: x, top: PATH_Y }} />
       ))}
       <span className="rv-point" />
 
-      <SplitText text={seq.lines[0]} className="rv-line rv-line-1 persp" />
-      <SplitText text={seq.lines[1]} className="rv-line rv-line-2 persp" />
+      <div className="rv-closing">
+        {seq.lines.map((line, i) => (
+          <SplitText key={line} text={line} className={`rv-close rv-close-${i} persp`} />
+        ))}
+      </div>
 
       <div className="rv-logo-wrap">
         <span className="rv-halo rv-halo-1" />
         <span className="rv-halo rv-halo-2" />
         <div className="rv-logo">
-          <IMSLogo height={170} />
+          <IMSLogo height={150} />
         </div>
       </div>
 
-      <div className="rv-words">
-        {seq.words.map((w) => (
-          <span key={w} className="rv-word">
-            {w}
-          </span>
-        ))}
-      </div>
-
-      <SplitText text={seq.journey} className="rv-journey persp" />
       <span className="rv-presented">{seq.presentedBy}</span>
       {centre.show && (
         <span className="rv-centre">

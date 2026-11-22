@@ -1,11 +1,12 @@
 /**
- * Presentation structure, timing and copy for the opening act.
- * Edit durations, autoplay and on-screen text here — no component changes needed.
+ * Presentation structure, timing and on-screen copy for the opening and finale.
+ * Edit durations, autoplay and text here — no component changes needed.
+ * Act-specific content lives in src/data/.
  */
 
-export type ActId = 1 | 2 | 3 | 4 | 5;
+export type ActId = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type SceneId = 'intro' | 'portal' | 'businessverse' | 'boardroom' | 'pathway' | 'reveal';
+export type SceneId = 'intro' | 'guess' | 'ceo' | 'careers' | 'wyr' | 'pathway' | 'reveal';
 
 export interface ActDef {
   id: ActId;
@@ -27,23 +28,25 @@ export interface SceneDef {
 
 export const acts: ActDef[] = [
   { id: 1, code: '01', title: 'The Reality Check' },
-  { id: 2, code: '02', title: 'Enter the Businessverse' },
-  { id: 3, code: '03', title: 'The Boardroom Challenge' },
-  { id: 4, code: '04', title: 'The Unlocked Path' },
-  { id: 5, code: '05', title: 'The IMS Reveal' },
+  { id: 2, code: '02', title: 'Guess the Business' },
+  { id: 3, code: '03', title: 'You Are the CEO' },
+  { id: 4, code: '04', title: 'The Career Reveal' },
+  { id: 5, code: '05', title: 'Would You Rather?' },
+  { id: 6, code: '06', title: 'The Next Move' },
 ];
 
 export const scenes: SceneDef[] = [
-  { id: 'intro', act: 1, label: 'Reality Check', durationSec: 52, autoAdvance: true, exit: 'fade' },
-  { id: 'portal', act: 1, label: 'The Portal', durationSec: 21, autoAdvance: true, exit: 'zoom' },
-  // Fades (not zooms) so a world can open into the Boardroom behind it.
-  { id: 'businessverse', act: 2, label: 'Career Worlds', durationSec: 105, autoAdvance: false, exit: 'fade' },
-  // The Boardroom never auto-advances: voting and reveals are presenter-led.
-  { id: 'boardroom', act: 3, label: 'Boardroom', durationSec: 180, autoAdvance: false, exit: 'fade' },
-  // Fades so Act 05 can pick the pathway nodes up exactly where they are.
-  { id: 'pathway', act: 4, label: 'Career Pathway', durationSec: 70, autoAdvance: true, exit: 'fade' },
+  { id: 'intro', act: 1, label: 'Reality Check', durationSec: 50, autoAdvance: true, exit: 'fade' },
+  // Acts 02–05 are presenter-led: every reveal and vote waits for →.
+  { id: 'guess', act: 2, label: 'Guess the Business', durationSec: 85, autoAdvance: false, exit: 'fade' },
+  // The CEO challenge never auto-advances: voting, decisions and reveals are presenter-led.
+  { id: 'ceo', act: 3, label: 'You Are the CEO', durationSec: 210, autoAdvance: false, exit: 'fade' },
+  { id: 'careers', act: 4, label: 'Career Reveal', durationSec: 120, autoAdvance: false, exit: 'fade' },
+  { id: 'wyr', act: 5, label: 'Would You Rather?', durationSec: 65, autoAdvance: false, exit: 'fade' },
+  // Fades so the finale can pick the pathway nodes up exactly where they are.
+  { id: 'pathway', act: 6, label: 'The Next Move', durationSec: 42, autoAdvance: true, exit: 'fade' },
   // The final screen holds until the presenter advances or restarts.
-  { id: 'reveal', act: 5, label: 'IMS Reveal', durationSec: 105, autoAdvance: false, exit: 'fade' },
+  { id: 'reveal', act: 6, label: 'IMS', durationSec: 28, autoAdvance: false, exit: 'fade' },
 ];
 
 export const presentationSettings = {
@@ -55,70 +58,42 @@ export const presentationSettings = {
 };
 
 export const audioSettings = {
-  /** Audio is always muted on load (browser autoplay rules); M or the toggle enables it. */
+  /** Audio is always muted on load (browser autoplay rules); the start screen or M enables it. */
   masterVolume: 0.7,
   ambientVolume: 0.35,
   effectsVolume: 0.8,
 };
 
-/** ACT 01 copy. Beat hold times are in seconds. */
+/** ACT 01 — The Reality Check. A fast hook, an interruption, a surprise. */
 export const introSequence = {
-  classLine: { text: 'CLASS 11.', hold: 3.2 },
-  streamLine: { text: 'COMMERCE.', hold: 3.0 },
-  planLine: { text: 'YOU HAVE A PLAN?', hold: 3.4 },
-  options: { items: ['CA?', 'B.COM?', 'MBA?'], hold: 3.6 },
-  maybeLine: { text: 'OR MAYBE', hold: 3.2 },
-  biggerLine: { lines: ['YOUR OPTIONS', 'ARE MUCH'], emphasis: 'BIGGER.', hold: 4.6 },
-  tagline: { lead: 'YOUR STREAM IS NOT YOUR', emphasis: 'CEILING.', hold: 9 },
-  supporting: ['EXPLORE.', 'THINK.', 'DECIDE.', 'DISCOVER.'],
-  /** Career words that burst outward on "YOUR OPTIONS ARE MUCH BIGGER." (up to 10 are shown). */
-  burstWords: [
-    'MANAGEMENT CONSULTING',
-    'BRAND MANAGEMENT',
-    'INVESTMENT BANKING',
-    'PRODUCT MANAGEMENT',
-    'ENTREPRENEURSHIP',
-    'BUSINESS ANALYTICS',
-    'CORPORATE STRATEGY',
-    'FINANCIAL ANALYSIS',
-    'CONSUMER INSIGHTS',
-    'VENTURE DEVELOPMENT',
-  ],
+  hook: 'BE HONEST.',
+  setupLead: 'WHEN SOMEONE SAYS',
+  setupWord: 'COMMERCE...',
+  ask: 'WHAT COMES TO MIND?',
+  /** Pause after the question so the room can shout answers (seconds). */
+  askPause: 2.6,
+  usual: ['CA.', 'B.COM.', 'ACCOUNTING.', 'MBA.'],
+  interrupt: 'WAIT.',
+  notClose: ["THAT'S NOT EVEN CLOSE", 'TO THE WHOLE STORY.'],
+  orderLine: 'EVERY TIME YOU ORDER FOOD...',
+  machineLine: ["THERE'S AN ENTIRE BUSINESS MACHINE", 'WORKING BEHIND THAT ORDER.'],
+  /** Jobs that flash around the order — the "machine". */
+  machineParts: ['MARKETING', 'PRICING', 'LOGISTICS', 'DATA', 'FINANCE', 'PRODUCT', 'CUSTOMER SUPPORT', 'STRATEGY'],
+  challenge: ["LET'S SEE HOW MUCH OF THE BUSINESS WORLD", 'YOU ACTUALLY KNOW.'],
 };
 
 /**
- * ACT 02 pacing. The worlds are presenter-led: each waits for →.
- * Set autoAdvance to true to have the overview and each world move on by
- * themselves after these many seconds instead.
- */
-export const universeTiming = {
-  autoAdvance: false,
-  overviewSec: 8,
-  worldSec: 13,
-};
-
-/**
- * ACT 04 pacing. The pathway plays by itself: the opening question, each
- * stage and the IMS beat stay on screen for stepSec seconds, then the act
- * flows into Act 05. → skips ahead, Space holds. Set autoAdvance to false
- * to have every stage wait for the presenter instead.
+ * ACT 06 pacing. The pathway plays by itself: each stage and the IMS beat
+ * stay on screen for stepSec seconds, then it flows into the finale.
+ * → skips ahead, Space holds. Set autoAdvance to false to step manually.
  */
 export const pathwayTiming = {
   autoAdvance: true,
-  stepSec: 10,
+  stepSec: 6,
 };
 
-/** ACT 05 closing copy. */
+/** ACT 06 closing copy. */
 export const revealSequence = {
-  lines: ["THE FUTURE ISN'T SOMETHING YOU WAIT FOR.", "IT'S SOMETHING YOU PREPARE FOR."],
-  words: ['EXPLORE.', 'LEARN.', 'PREPARE.', 'GROW.'],
-  journey: 'YOUR JOURNEY STARTS WITH A QUESTION.',
+  lines: ['YOUR STREAM IS NOT YOUR CEILING.', 'YOUR FUTURE IS NOT PRE-DECIDED.', 'YOUR NEXT MOVE STARTS WITH CURIOSITY.'],
   presentedBy: 'PRESENTED BY IMS',
-};
-
-export const portalSequence = {
-  loadingLabel: 'ENTERING THE BUSINESSVERSE',
-  welcomeLead: 'WELCOME TO THE',
-  welcomeTitle: 'BUSINESSVERSE.',
-  welcomeHold: 9,
 };

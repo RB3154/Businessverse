@@ -12,7 +12,7 @@ import { charsIn, sfx } from '../utils/motion';
 
 
 /**
- * ACT 04 — The Unlocked Path. The boardroom's growth line straightens into a
+ * ACT 06 — The Next Move. A growth line straightens into a
  * pathway; each Next unlocks a stage; the last beat introduces IMS at the
  * entrance-preparation stage.
  */
@@ -77,7 +77,7 @@ export function CareerPathScene(_props: { def: SceneDef }) {
       tl.to(labels[k], { autoAlpha: 1, duration: 0.4 }, unlock);
       sfx(tl, 'impact', unlock);
       tl.set(panels[k], { autoAlpha: 1, y: 0 }, unlock + 0.15);
-      const items = panels[k].querySelectorAll('.pw-panel-visual, .pw-title, .pw-lead, .pw-line, .pw-chips-label, .pw-chip, .pw-note');
+      const items = panels[k].querySelectorAll('.pw-panel-visual, .pw-title, .pw-lead, .pw-line, .pw-note');
       tl.fromTo(
         items,
         rm ? { autoAlpha: 0 } : { autoAlpha: 0, y: 30, filter: 'blur(6px)' },
@@ -118,7 +118,7 @@ export function CareerPathScene(_props: { def: SceneDef }) {
       <svg className="pw-svg" viewBox="0 0 1920 1080" aria-hidden="true">
         <defs>
           {/* userSpaceOnUse: a perfectly flat line has a zero-height bounding box, which would hide a bbox gradient. */}
-          <linearGradient id="pw-grad" gradientUnits="userSpaceOnUse" x1="260" y1="0" x2="1660" y2="0">
+          <linearGradient id="pw-grad" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="1680" y2="0">
             <stop offset="0" stopColor="#7657F6" />
             <stop offset="0.6" stopColor="var(--brand-ims-blue)" />
             <stop offset="1" stopColor="#22B9F2" />
@@ -182,7 +182,7 @@ export function CareerPathScene(_props: { def: SceneDef }) {
         </div>
       </div>
 
-      <HudFrame left="THE BUSINESSVERSE · ACT 04" />
+      <HudFrame left="THE BUSINESSVERSE · ACT 06" />
     </div>
   );
 }

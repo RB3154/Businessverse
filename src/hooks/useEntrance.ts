@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { usePresentation } from '../../hooks/usePresentation';
+import { usePresentation } from './usePresentation';
 
 /**
  * Staggered entrance for every `[data-in]` element inside the returned ref,

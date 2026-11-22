@@ -240,26 +240,22 @@
   animation: rv-pulse 2.2s ease-out infinite;
 }
 @keyframes rv-pulse { from { transform: scale(0.6); opacity: 1; } to { transform: scale(2.4); opacity: 0; } }
-.rv-line {
+.rv-closing {
   position: absolute;
   left: 0;
   right: 0;
-  text-align: center;
-  font: 700 82px/1.05 var(--font-display);
-  letter-spacing: -0.035em;
-  visibility: hidden;
+  top: 390px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  transform-origin: 50% 0;
 }
-.rv-line-1 { top: 470px; color: rgba(245, 245, 250, 0.82); }
-.rv-line-2 {
-  top: 600px;
-  background: linear-gradient(100deg, var(--color-lavender), var(--brand-ims-blue) 60%, var(--color-neon));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.rv-line-2 .char { background: inherit; -webkit-background-clip: text; background-clip: text; }
-
-.rv-logo-wrap { position: absolute; left: 960px; top: 470px; width: 0; height: 0; }
+.rv-close { font: 700 84px/1.04 var(--font-display); letter-spacing: -0.035em; text-align: center; visibility: hidden; }
+.rv-close-0 { color: #fff; }
+.rv-close-1 { color: rgba(245, 245, 250, 0.72); }
+.rv-close-2 { color: var(--brand-ims-blue); }
+.rv-logo-wrap { position: absolute; left: 960px; top: 310px; width: 0; height: 0; }
 .rv-logo { position: absolute; left: 0; top: 0; width: max-content; transform: translate(-50%, -50%); visibility: hidden; }
 .rv-logo > span { box-shadow: 0 0 60px rgba(255, 255, 255, 0.35), 0 0 160px color-mix(in srgb, var(--brand-ims-blue) 55%, transparent); }
 .rv-halo {
@@ -272,37 +268,11 @@
 .rv-halo-1 { width: 620px; height: 620px; left: -310px; top: -310px; }
 .rv-halo-2 { width: 900px; height: 900px; left: -450px; top: -450px; border-color: color-mix(in srgb, var(--brand-ims-blue) 30%, transparent); }
 
-.rv-words {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 760px;
-  display: flex;
-  justify-content: center;
-  gap: 70px;
-}
-.rv-word {
-  font: 700 64px/1 var(--font-display);
-  letter-spacing: 0.04em;
-  visibility: hidden;
-}
-.rv-word:nth-child(4) { color: var(--brand-ims-blue); }
-
-.rv-journey {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 600px;
-  text-align: center;
-  font: 700 86px/1.05 var(--font-display);
-  letter-spacing: -0.04em;
-  visibility: hidden;
-}
 .rv-presented {
   position: absolute;
   left: 0;
   right: 0;
-  top: 770px;
+  top: 960px;
   text-align: center;
   font: 600 24px/1 var(--font-display);
   letter-spacing: 0.4em;
@@ -313,7 +283,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 830px;
+  top: 1000px;
   text-align: center;
   font: 400 22px/1.4 var(--font-sans);
   color: rgba(245, 245, 250, 0.55);
