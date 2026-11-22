@@ -4,8 +4,6 @@ An immersive, presenter-controlled career discovery experience, independently co
 
 The project demonstrates the application of frontend development, interactive experience design, animation, presentation controls, storytelling and problem-solving to create an engaging career-discovery experience.
 
-Designed as an approximately 10-minute interactive opening experience for a careers seminar.
-
 **Your stream is not your ceiling.** Explore. Think. Decide. Discover.
 
 **Live (unlisted):** https://businessverse-rho.vercel.app — hosted on Vercel; every push to `main` redeploys automatically. For the event itself, run it offline from the laptop (see below).
