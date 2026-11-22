@@ -1,8 +1,8 @@
 # The Businessverse
 
-An immersive, presenter-controlled career discovery experience, independently conceptualised, designed and developed as a technical evaluation project for the CMO at **IMS Vadodara**.
+An immersive, presenter-controlled career discovery experience, independently conceptualised, designed and developed as a technical evaluation project.
 
-The project demonstrates the application of frontend development, interactive experience design, animation, presentation controls, storytelling and problem-solving to create an engaging career-discovery experience for Class 11 Commerce students.
+The project demonstrates the application of frontend development, interactive experience design, animation, presentation controls, storytelling and problem-solving to create an engaging career-discovery experience.
 
 Designed as an approximately 10-minute interactive opening experience for a careers seminar.
 
