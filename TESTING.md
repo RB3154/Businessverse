@@ -36,9 +36,9 @@ Run this once on the actual presentation hardware, ideally in the venue.
 - [ ] **Colours on the projector:** the IMS logo plate and IMS blue look right.
 - [ ] **Timing rehearsal:** a full run with the presenter talking lands near 10 minutes; the elapsed clock is on the bottom-right of the controls.
 
-## Content review before the event
+## Content accuracy checks before any live use
 
-- [ ] IMS reviews the institutional description and the four features (`branding.config.ts`, `data/pathway.ts`).
-- [ ] Someone checks the CAT wording in Act 04 (`data/pathway.ts`).
+- [ ] Re-check the IMS description and its four features against the latest public information on imsindia.com (`branding.config.ts`, `data/pathway.ts`).
+- [ ] Check the CAT wording in Act 06 (`data/pathway.ts`).
 - [ ] Someone reviews the copy written for this project: the CEO outcomes and trade-offs (`data/businessScenario.ts`), the Amul clues and functions, the ₹199 order breakdown, career explanations and Would You Rather insights (`data/experience.ts`).
 - [ ] If the Vadodara address is to be shown, re-verify it on https://www.imsindia.com/center/vadodara/ and set `vadodaraCentre.show: true`.
