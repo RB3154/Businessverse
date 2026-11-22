@@ -9,6 +9,8 @@ export interface PresentationState {
   soundOn: boolean;
   isFullscreen: boolean;
   showHelp: boolean;
+  /** False while the standby screen is up, before the presenter starts the show. */
+  started: boolean;
   /** Increments on restart so every scene remounts cleanly. */
   runId: number;
 }
@@ -22,6 +24,8 @@ export interface SceneSteps {
 export interface PresentationApi extends PresentationState {
   scene: SceneDef;
   reducedMotion: boolean;
+  /** Leave the standby screen. Sound can only start from a user gesture, so it is chosen here. */
+  start: (withSound: boolean) => void;
   next: () => void;
   prev: () => void;
   /** Pass `fromStart` to open the scene at its beginning even when jumping backwards. */

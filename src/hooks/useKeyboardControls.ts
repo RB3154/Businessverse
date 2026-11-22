@@ -32,6 +32,7 @@ export function useKeyboardControls(handlers: KeyboardHandlers) {
       switch (e.key) {
         case 'ArrowRight':
         case 'PageDown':
+        case 'Enter':
           action = h.next;
           break;
         case 'ArrowLeft':

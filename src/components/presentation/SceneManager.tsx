@@ -17,7 +17,7 @@ const EXIT_MS = 950;
  * exit so transitions overlap instead of cutting.
  */
 export function SceneManager() {
-  const { sceneIndex, runId, direction, isPaused } = usePresentation();
+  const { sceneIndex, runId, direction, isPaused, started } = usePresentation();
   const [layers, setLayers] = useState<Layer[]>(() => [
     { key: `${runId}-${sceneIndex}`, index: sceneIndex, leaving: false, direction },
   ]);
@@ -43,6 +43,8 @@ export function SceneManager() {
     const id = window.setTimeout(() => setLayers((prev) => prev.filter((l) => !l.leaving)), EXIT_MS);
     return () => window.clearTimeout(id);
   }, [layers]);
+
+  if (!started) return null;
 
   return (
     <div className={`absolute inset-0 ${isPaused ? 'is-paused' : ''}`}>

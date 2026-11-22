@@ -4,6 +4,7 @@ import { PresentationController } from './components/presentation/PresentationCo
 import { PresentationControls } from './components/presentation/PresentationControls';
 import { SceneManager } from './components/presentation/SceneManager';
 import { ShortcutsOverlay } from './components/presentation/ShortcutsOverlay';
+import { StartScreen } from './components/presentation/StartScreen';
 import { Stage } from './components/presentation/Stage';
 import { BackgroundEffects } from './components/shared/BackgroundEffects';
 
@@ -18,6 +19,7 @@ export default function App() {
         <BackgroundEffects />
         <Stage>
           <SceneManager />
+          <StartScreen />
           <PresentationControls />
           <ShortcutsOverlay />
         </Stage>

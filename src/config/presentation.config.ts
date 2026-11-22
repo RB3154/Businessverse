@@ -86,6 +86,16 @@ export const introSequence = {
   ],
 };
 
+/**
+ * ACT 02 pacing. With autoplay on, the overview and each world move on by
+ * themselves after these many seconds (→ skips ahead, Space holds).
+ * With autoplay off, every world waits for the presenter.
+ */
+export const universeTiming = {
+  overviewSec: 8,
+  worldSec: 13,
+};
+
 /** ACT 05 closing copy. */
 export const revealSequence = {
   lines: ["THE FUTURE ISN'T SOMETHING YOU WAIT FOR.", "IT'S SOMETHING YOU PREPARE FOR."],

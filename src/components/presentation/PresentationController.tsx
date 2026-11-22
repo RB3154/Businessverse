@@ -15,6 +15,7 @@ const initialState: PresentationState = {
   soundOn: false,
   isFullscreen: false,
   showHelp: false,
+  started: false,
   runId: 0,
 };
 
@@ -29,18 +30,28 @@ export function PresentationController({ children }: { children: ReactNode }) {
   const goTo = useCallback((index: number, fromStart = false) => {
     setState((s) => {
       const target = clamp(index, 0, scenes.length - 1);
-      if (target === s.sceneIndex) return s;
+      if (target === s.sceneIndex) return s.started ? s : { ...s, started: true };
       // Stepping back (←) lands on a scene's last beat; jumping to an act starts it fresh.
-      return { ...s, sceneIndex: target, direction: fromStart || target > s.sceneIndex ? 1 : -1 };
+      return { ...s, started: true, sceneIndex: target, direction: fromStart || target > s.sceneIndex ? 1 : -1 };
     });
   }, []);
 
+  const start = useCallback((withSound: boolean) => {
+    if (stateRef.current.started) return;
+    audioEngine.setEnabled(withSound);
+    progressStore.reset();
+    setState((s) => ({ ...s, started: true, soundOn: withSound, isPaused: false }));
+  }, []);
+
   const next = useCallback(() => {
+    // From the standby screen, Next (→, Enter, clicker) starts the show with sound.
+    if (!stateRef.current.started) return start(true);
     if (stepsRef.current?.next?.()) return;
     goTo(stateRef.current.sceneIndex + 1);
-  }, [goTo]);
+  }, [goTo, start]);
 
   const prev = useCallback(() => {
+    if (!stateRef.current.started) return;
     if (stepsRef.current?.prev?.()) return;
     goTo(stateRef.current.sceneIndex - 1);
   }, [goTo]);
@@ -55,12 +66,15 @@ export function PresentationController({ children }: { children: ReactNode }) {
     [goTo],
   );
 
-  const togglePause = useCallback(() => setState((s) => ({ ...s, isPaused: !s.isPaused })), []);
+  const togglePause = useCallback(() => {
+    if (!stateRef.current.started) return start(true);
+    setState((s) => ({ ...s, isPaused: !s.isPaused }));
+  }, [start]);
 
   const restart = useCallback(() => {
     stepsRef.current = null;
     progressStore.reset();
-    setState((s) => ({ ...s, sceneIndex: 0, direction: 1, isPaused: false, showHelp: false, runId: s.runId + 1 }));
+    setState((s) => ({ ...s, sceneIndex: 0, direction: 1, isPaused: false, showHelp: false, started: true, runId: s.runId + 1 }));
   }, []);
 
   const toggleSound = useCallback(() => {
@@ -106,6 +120,7 @@ export function PresentationController({ children }: { children: ReactNode }) {
       ...state,
       scene: scenes[state.sceneIndex],
       reducedMotion,
+      start,
       next,
       prev,
       goTo,
@@ -117,7 +132,7 @@ export function PresentationController({ children }: { children: ReactNode }) {
       sceneComplete,
       registerSteps,
     }),
-    [state, reducedMotion, next, prev, goTo, togglePause, restart, toggleSound, toggleFullscreen, setShowHelp, sceneComplete, registerSteps],
+    [state, reducedMotion, start, next, prev, goTo, togglePause, restart, toggleSound, toggleFullscreen, setShowHelp, sceneComplete, registerSteps],
   );
 
   return <PresentationContext.Provider value={api}>{children}</PresentationContext.Provider>;

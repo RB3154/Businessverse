@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
 import type { CareerWorld, WorldMotif } from '../../data/careerWorlds';
+import { audioEngine } from '../../utils/audioEngine';
 
 /**
  * The Businessverse in WebGL: five career worlds on an arc, linked to a
@@ -92,7 +93,15 @@ export class Universe {
   private camera = new THREE.PerspectiveCamera(45, STAGE_W / STAGE_H, 0.1, 200);
   private look = new THREE.Vector3();
   private worlds: THREE.Group[] = [];
-  private spinners: { obj: THREE.Object3D; axis: 'x' | 'y' | 'z'; speed: number }[] = [];
+  /** `world` ties a spinner to a world so focusing it can speed that motif up (-1 = scenery). */
+  private spinners: { obj: THREE.Object3D; axis: 'x' | 'y' | 'z'; speed: number; world?: number }[] = [];
+  private motifs: THREE.Group[] = [];
+  /** Extra spin per world, kicked up when a world is focused and decaying back to 0. */
+  private boost = [0, 0, 0, 0, 0];
+  /** Camera position before idle drift is added; GSAP tweens this between shots. */
+  private basePos = new THREE.Vector3();
+  private driftT = 0;
+  private tmp2 = new THREE.Vector3();
   private planetMats: THREE.ShaderMaterial[] = [];
   private links: THREE.LineBasicMaterial[] = [];
   private clock = new THREE.Clock();
@@ -115,7 +124,8 @@ export class Universe {
     this.resize();
 
     // Arrive from deep space.
-    this.camera.position.set(0, 1.5, 70);
+    this.basePos.set(0, 1.5, 70);
+    this.camera.position.copy(this.basePos);
     this.look.copy(SHOTS[0].look);
     this.camera.lookAt(this.look);
 
@@ -182,6 +192,8 @@ export class Universe {
     const color = new THREE.Color(world.accent);
     const group = new THREE.Group();
     group.position.copy(WORLD_POS[i]);
+    // Worlds start collapsed and arrive one by one in intro().
+    group.scale.setScalar(this.reducedMotion ? 1 : 0.001);
 
     const mat = this.track(
       new THREE.ShaderMaterial({
@@ -194,14 +206,17 @@ export class Universe {
     const planet = new THREE.Mesh(this.track(new THREE.SphereGeometry(1.5, 64, 48)), mat);
     group.add(planet, this.glow(2.05, color.clone(), 2.2, 2.5));
 
+    const spinnersBefore = this.spinners.length;
     const motif = this.buildMotif(world.id, color, i);
+    this.spinners.slice(spinnersBefore).forEach((sp) => (sp.world = i));
+    this.motifs.push(motif);
     motif.rotation.z = (rand(i + 9) - 0.5) * 0.5;
     group.add(motif);
     this.scene.add(group);
     this.worlds.push(group);
 
     // Link from the nexus to this world.
-    const linkMat = this.track(new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.22 }));
+    const linkMat = this.track(new THREE.LineBasicMaterial({ color, transparent: true, opacity: this.reducedMotion ? 0.3 : 0 }));
     this.links.push(linkMat);
     const mid = NEXUS_POS.clone().lerp(WORLD_POS[i], 0.5).add(new THREE.Vector3(0, 1.6, 0));
     const curve = new THREE.QuadraticBezierCurve3(NEXUS_POS, mid, WORLD_POS[i]);
@@ -322,6 +337,24 @@ export class Universe {
     this.spinners.push({ obj: dust, axis: 'y', speed: 0.004 });
   }
 
+  /** Worlds arrive one at a time with a pop, and their links to the nexus light up. */
+  private intro() {
+    if (this.reducedMotion) return;
+    this.worlds.forEach((w, i) => {
+      const at = 1.3 + i * 0.42;
+      gsap.to(w.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        duration: 1.1,
+        delay: at,
+        ease: 'back.out(1.8)',
+        onStart: () => audioEngine.play('pop'),
+      });
+      gsap.to(this.links[i], { opacity: 0.3, duration: 1.2, delay: at + 0.3 });
+    });
+  }
+
   setFocus(index: number) {
     if (index === this.focus) return;
     const first = this.focus === -1;
@@ -332,14 +365,28 @@ export class Universe {
     const ease = first ? 'power3.out' : 'power2.inOut';
     this.camTween = gsap
       .timeline({ paused: this.paused })
-      .to(this.camera.position, { x: shot.pos.x, y: shot.pos.y, z: shot.pos.z, duration, ease }, 0)
+      .to(this.basePos, { x: shot.pos.x, y: shot.pos.y, z: shot.pos.z, duration, ease }, 0)
       .to(this.look, { x: shot.look.x, y: shot.look.y, z: shot.look.z, duration, ease }, 0);
+    if (first) {
+      this.intro();
+      return;
+    }
     this.links.forEach((m) => gsap.to(m, { opacity: index === 6 ? 0.7 : index === 0 ? 0.3 : 0.12, duration: 1.2 }));
     // The focused world stays full size; the others recede so the eye stays on one place.
     this.worlds.forEach((w, i) => {
       const s = index >= 1 && index <= 5 && index - 1 !== i ? 0.5 : 1;
-      gsap.to(w.scale, { x: s, y: s, z: s, duration: this.reducedMotion ? 0.01 : 1.6, ease: 'power2.inOut' });
+      gsap.to(w.scale, { x: s, y: s, z: s, duration: this.reducedMotion ? 0.01 : 1.6, ease: 'power2.inOut', overwrite: 'auto' });
     });
+    // The focused world comes alive: its motif bursts outward and spins up, then settles.
+    const k = index - 1;
+    if (k >= 0 && k < this.motifs.length && !this.reducedMotion) {
+      gsap.fromTo(this.motifs[k].scale, { x: 0.55, y: 0.55, z: 0.55 }, { x: 1, y: 1, z: 1, duration: 1.8, delay: 1.2, ease: 'elastic.out(1, 0.45)' });
+      gsap.fromTo(this.boost, { [k]: 6 }, { [k]: 0, duration: 4.5, delay: 1.2, ease: 'power2.out' });
+    }
+    if (index === 6 && !this.reducedMotion) {
+      // Closing: every world gets one last spin as the links light up.
+      this.motifs.forEach((_, i) => gsap.fromTo(this.boost, { [i]: 4 }, { [i]: 0, duration: 4, delay: 0.6 + i * 0.12, ease: 'power2.out' }));
+    }
   }
 
   setPaused(paused: boolean) {
@@ -353,11 +400,18 @@ export class Universe {
     const dt = Math.min(this.clock.getDelta(), 0.05);
     if (document.hidden) return;
     const motion = this.paused ? 0 : this.reducedMotion ? 0.15 : 1;
-    for (const s of this.spinners) s.obj.rotation[s.axis] += s.speed * dt * motion;
+    for (const s of this.spinners) s.obj.rotation[s.axis] += s.speed * dt * motion * (1 + (s.world !== undefined ? this.boost[s.world] : 0));
     for (const m of this.planetMats) m.uniforms.uTime.value += dt * motion;
     this.worlds.forEach((w, i) => {
       w.position.y = WORLD_POS[i].y + Math.sin(this.clock.elapsedTime * 0.5 + i) * 0.12 * motion;
     });
+    // Idle drift: a slow orbit around whatever the camera is looking at, so a held shot is never a still frame.
+    this.driftT += dt * motion;
+    const amp = this.focus >= 1 && this.focus <= 5 ? 0.2 : 0.09;
+    const angle = Math.sin(this.driftT * 0.11) * amp;
+    this.tmp2.copy(this.basePos).sub(this.look).applyAxisAngle(THREE.Object3D.DEFAULT_UP, angle);
+    this.camera.position.copy(this.look).add(this.tmp2);
+    this.camera.position.y += Math.sin(this.driftT * 0.17) * 0.25;
     this.camera.lookAt(this.look);
     this.renderer.render(this.scene, this.camera);
 
@@ -379,6 +433,8 @@ export class Universe {
     this.camTween?.kill();
     this.links.forEach((m) => gsap.killTweensOf(m));
     this.worlds.forEach((w) => gsap.killTweensOf(w.scale));
+    this.motifs.forEach((m) => gsap.killTweensOf(m.scale));
+    gsap.killTweensOf(this.boost);
     this.disposables.forEach((d) => d.dispose());
     this.renderer.dispose();
   }

@@ -19,9 +19,9 @@ An immersive, presenter-controlled career discovery experience for **IMS Vadodar
 ## On the day (presenter quick start)
 
 1. **Double-click `Start Presentation.bat`.** It builds the show if needed and opens it in the browser at `http://localhost:4173`. No internet is needed once dependencies are installed.
-2. Press **F** for fullscreen.
-3. Press **M** if you want sound (it always starts muted).
-4. Press **→** (or a clicker's *Next*) to move on whenever you are ready.
+2. Press **F** for fullscreen. A quiet **standby screen** waits while the room fills up.
+3. When ready, press **→ / Enter** (or a clicker's *Next*, or click **Start with sound**) to begin. Choose **Start muted** for no sound; **M** toggles sound at any time.
+4. Press **→** to move on whenever you are ready.
 
 | Key | Action |
 | --- | --- |
@@ -40,7 +40,7 @@ On-screen controls and the cursor hide after ~2.6 s without mouse movement; move
 ### What runs by itself and what waits for you
 
 - **Act 01** plays through and hands over to Act 02 on its own (→ skips ahead beat by beat).
-- **Act 02** waits on every world. Each → reveals the next one.
+- **Act 02** plays by itself: the worlds arrive one by one, then each world is shown for 13 seconds (a thin line under its title shows time left) before the camera flies to the next. Press → to move on sooner, Space to stay on a world longer. Timings are in `universeTiming` in `presentation.config.ts`.
 - **Act 03 never moves on by itself.** Steps: welcome → brief → options → **countdown** → hand vote → outcome A → B → C → "No single right answer" → who makes these decisions → Continue.
   - Click **Start 15-second countdown** (or →). When it hits zero it shows *Hands up!* and **waits**; pressing → during the countdown ends it early.
   - Record the winning option by clicking its card or pressing **1 / 2 / 3**. It stays highlighted through the outcomes. No option is ever presented as the correct one.
@@ -53,7 +53,7 @@ On-screen controls and the cursor hide after ~2.6 s without mouse movement; move
 
 | File | What it controls |
 | --- | --- |
-| `src/config/presentation.config.ts` | Scene order and durations, autoplay on/off, audio levels, all Act 01 text, Act 05 closing messages. |
+| `src/config/presentation.config.ts` | Scene order and durations, autoplay on/off, Act 02 pacing (`universeTiming`), audio levels, all Act 01 text, Act 05 closing messages. |
 | `src/data/careerWorlds.ts` | The five career worlds: titles, quotes, careers and their plain-language explanations, colours. |
 | `src/data/businessScenario.ts` | The Boardroom: funds, the three options, countdown length, consequences, lessons, roles. |
 | `src/data/pathway.ts` | The five pathway stages (CAT/MBA wording) and the IMS connection copy. |
@@ -99,7 +99,7 @@ Copy the whole folder (including `node_modules`, or run `npm install` once while
 - Act 03 is a small step state machine (`BoardroomScene`); its countdown runs on wall-clock time and pauses with the show.
 - Act 02's universe is vanilla three.js in a separate, lazily-loaded chunk that is prefetched during Act 01. Without WebGL it automatically falls back to a CSS rendition of the same worlds.
 - One persistent particle canvas (`BackgroundEffects`) carries the atmosphere across all acts.
-- **Sound** is original and synthesised live with the Web Audio API (`src/utils/audioEngine.ts`): an ambient drone plus impact, tick, glitch, whoosh, rise and reveal effects. No audio files and no streaming. It is muted by default, and nothing depends on it.
+- **Sound** is original and synthesised live with the Web Audio API (`src/utils/audioEngine.ts`): an ambient pad plus impact, tick, pop, glitch, whoosh, rise and reveal effects, voiced in the mid range so laptop speakers and projectors can actually play them, with a compressor on the master. No audio files and no streaming. Nothing plays until the presenter starts with sound (browsers only allow audio after a click or key press), and nothing depends on it.
 - **Fonts**: Space Grotesk and Inter variable fonts (SIL Open Font License), Latin + Latin-Extended subsets only (Latin-Extended carries ₹), in `public/assets/fonts/` and preloaded.
 - **Reduced motion**: with the OS "reduce motion" setting on, kinetic movement becomes simple fades and looping motion stops.
 

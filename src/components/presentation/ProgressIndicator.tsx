@@ -9,12 +9,13 @@ const plannedTotal = actTotals.reduce((a, b) => a + b, 0);
 
 /** Thin act timeline along the bottom edge. Updates via rAF, not React renders. */
 export function ProgressIndicator({ expanded }: { expanded: boolean }) {
-  const { sceneIndex, scene, isPaused, runId, goTo } = usePresentation();
+  const { sceneIndex, scene, isPaused, runId, goTo, started } = usePresentation();
   const fills = useRef<(HTMLSpanElement | null)[]>([]);
   const clock = useRef<HTMLSpanElement>(null);
   const elapsed = useRef(0);
   const paused = useRef(isPaused);
-  paused.current = isPaused;
+  // The clock only runs once the show has started.
+  paused.current = isPaused || !started;
 
   useEffect(() => {
     elapsed.current = 0;

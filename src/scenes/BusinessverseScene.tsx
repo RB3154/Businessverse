@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react';
 import { careerWorlds, universeCopy } from '../data/careerWorlds';
-import type { SceneDef } from '../config/presentation.config';
+import { universeTiming, type SceneDef } from '../config/presentation.config';
 import { useSceneTimeline } from '../hooks/useSceneTimeline';
 import { SplitText, MaskedWord } from '../components/shared/AnimatedText';
 import { HudFrame } from '../components/shared/HudFrame';
@@ -9,17 +9,23 @@ import { UniverseView } from '../components/businessverse/UniverseView';
 import { charsIn, sfx } from '../utils/motion';
 
 const pad = (n: number) => String(n).padStart(2, '0');
-const BEAT = 4;
 
 /**
- * ACT 02 — Enter the Businessverse. Overview → five worlds (presenter reveals
- * each with Next) → "One stream. A thousand possibilities."
+ * ACT 02 — Enter the Businessverse. Overview → five worlds → "One stream. A
+ * thousand possibilities." With autoplay the worlds advance on a timer (shown
+ * as a thin line on each panel); → always skips ahead and Space holds.
  * Focus: 0 overview, 1–5 worlds, 6 closing.
  */
 export function BusinessverseScene(_props: { def: SceneDef }) {
   const [focus, setFocus] = useState(0);
 
-  const { scope } = useSceneTimeline('businessverse', (tl, { reducedMotion: rm, beats, background, onTime, hold }) => {
+  const { scope } = useSceneTimeline('businessverse', (tl, { reducedMotion: rm, autoplay, beats, background, onTime, hold }) => {
+    const OV = universeTiming.overviewSec;
+    const WS = universeTiming.worldSec;
+    /** With autoplay off, stop here and wait for the presenter. */
+    const wait = (at: number) => {
+      if (!autoplay) hold(at);
+    };
     const root = scope.current!;
     const $ = (s: string) => root.querySelector(s)!;
     const $$ = (s: string) => root.querySelectorAll(s);
@@ -47,12 +53,12 @@ export function BusinessverseScene(_props: { def: SceneDef }) {
     tl.fromTo($('.bv-overview .hud-label'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 1.4);
     charsIn(tl, $('.bv-overview-title'), 1.6, rm, 0.03);
     tl.fromTo($('.universe'), { opacity: 0 }, { opacity: 1, duration: 1.4 }, 0);
-    hold(BEAT);
+    wait(4);
 
     /* Worlds */
     const panels = $$('.world-panel');
     panels.forEach((panel, k) => {
-      const t = BEAT * (k + 1) + 1;
+      const t = OV + k * WS;
       mark(`world-${k + 1}`, t);
       if (k === 0) {
         tl.to($('.bv-overview'), { autoAlpha: 0, y: rm ? 0 : -20, duration: 0.5 }, t);
@@ -71,11 +77,12 @@ export function BusinessverseScene(_props: { def: SceneDef }) {
         tl.fromTo(row.querySelector('.wp-career-line'), { scaleY: 0 }, { scaleY: 1, duration: 0.6 }, at + 0.1);
         sfx(tl, 'tick', at);
       });
-      hold(t + 3.4);
+      if (autoplay) tl.fromTo(panel.querySelector('.wp-timer-fill'), { scaleX: 0 }, { scaleX: 1, duration: WS - 0.8, ease: 'none' }, t + 0.6);
+      wait(t + 3.4);
     });
 
     /* Closing */
-    const tc = BEAT * (panels.length + 1) + 1;
+    const tc = OV + panels.length * WS;
     mark('closing', tc);
     tl.to(panels[panels.length - 1], { autoAlpha: 0, x: rm ? 0 : -40, duration: 0.5, ease: 'power2.in' }, tc);
     sfx(tl, 'rise', tc);
@@ -111,6 +118,9 @@ export function BusinessverseScene(_props: { def: SceneDef }) {
             <SplitText text={w.title[0]} className="persp" />
             <SplitText text={w.title[1]} className="persp wp-title-accent" />
           </h2>
+          <span className="wp-timer" aria-hidden="true">
+            <span className="wp-timer-fill" />
+          </span>
           <p className="wp-quote">“{w.quote}”</p>
           <ul className="wp-careers">
             {w.careers.map((c) => (

@@ -105,11 +105,13 @@ export function UniverseView({ focus }: { focus: number }) {
           key={w.id}
           ref={(el) => (labelRefs.current[i] = el)}
           className="world-label"
-          style={
-            mode === 'fallback'
+          // Labels pop in just after their world arrives.
+          style={{
+            transitionDelay: focus === 0 ? `${1.9 + i * 0.42}s` : '0s',
+            ...(mode === 'fallback'
               ? { transform: `translate(${FALLBACK_POS[i].x}px, ${FALLBACK_POS[i].y + 110}px) translateX(-50%)` }
-              : undefined
-          }
+              : {}),
+          }}
         >
           <span className="world-label-index" style={{ color: w.accent }}>
             {String(i + 1).padStart(2, '0')}
