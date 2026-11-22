@@ -1,6 +1,8 @@
 # The Businessverse
 
-An immersive, presenter-controlled career discovery experience for **IMS Vadodara**. Built to run on a laptop connected to a projector, as a ~10-minute opening activity before a careers seminar for Class 11 Commerce students.
+An immersive, presenter-controlled career discovery experience concept, independently developed as an evaluation project for the CMO at **IMS Vadodara**.
+
+Designed as a ~10-minute interactive opening activity for a careers seminar targeting Class 11 Commerce students.
 
 **Your stream is not your ceiling.** Explore. Think. Decide. Discover.
 
@@ -63,7 +65,7 @@ Brands (Amul, Zomato, Swiggy) appear only as names in examples: no logos, no sta
 ### Branding notes
 
 - The logo is the SVG served by the official IMS India website header (verified 2026-11-22). It is dark ink on white, so on the dark scenes it always sits on a white plate; its colours and proportions are never altered. If the file goes missing, a clearly marked orange placeholder appears instead of a broken image.
-- IMS Blue `#0481FE` is the recognisable accent throughout; the brief's provisional palette is used for the rest.
+- IMS Blue `#0481FE` is the recognisable accent throughout; the project spec's provisional palette is used for the rest.
 - The IMS description and its four features (classroom learning, personal mentoring, SimCAT mock tests, learning resources) were checked against imsindia.com and the IMS Vadodara pages. No statistics, success rates, salaries or guarantees are shown anywhere.
 - The Vadodara centre address (from the official centre page, 2026-11-22) is stored but hidden. Set `vadodaraCentre.show: true` to show it on the final screen — re-verify it first.
 
