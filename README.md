@@ -4,6 +4,8 @@ An immersive, presenter-controlled career discovery experience for **IMS Vadodar
 
 **Your stream is not your ceiling.** Explore. Think. Decide. Discover.
 
+**Live (unlisted):** https://businessverse-rho.vercel.app — hosted on Vercel; every push to `main` redeploys automatically. For the event itself, run it offline from the laptop (see below).
+
 | Act | Title | What happens |
 | --- | --- | --- |
 | 01 | The Reality Check | Kinetic typography from "CLASS 11." to "YOUR STREAM IS NOT YOUR CEILING.", then a portal into the Businessverse. Plays on its own. |
