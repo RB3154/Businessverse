@@ -21,6 +21,9 @@ export function PathwayStage({ stage, index }: { stage: Stage; index: number }) 
       </div>
       <div className="pw-panel-body">
         <h2 className="pw-title">{stage.title}</h2>
+        <span className="pw-timer" aria-hidden="true">
+          <span className="pw-timer-fill" />
+        </span>
         <p className="pw-lead">{stage.lead}</p>
         {stage.lines.map((line) => (
           <p key={line} className="pw-line">

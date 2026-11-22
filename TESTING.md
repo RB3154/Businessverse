@@ -10,7 +10,8 @@ All runs used `npm run build`, then `npm run present`, driven by headless Chrome
 | Standby screen shown on load; Enter starts the show with sound | Pass |
 | Full keyboard pass through all five acts with sound on | Pass. Acts 01 → 05 reached, no console errors or warnings. |
 | Audio actually reaches the output (measured with an analyser tap) | Pass. Peaks around −15 dBFS, about half the energy above 200 Hz (audible on laptop speakers); M mutes to silence. |
-| Act 02 worlds arrive one by one and advance on the 13 s timer | Pass |
+| Act 02 worlds arrive one by one, then wait for → (no auto-advance after 15 s idle) | Pass |
+| Act 04 advances every 10 s (question, five stages, IMS) and flows into Act 05 at ~70 s | Pass |
 | Network requests to anything other than localhost | None |
 | Failed requests or broken assets | None |
 | Act 01 autoplay hands over to Act 02 unaided | Pass (reached Act 02 at ~75 s) |

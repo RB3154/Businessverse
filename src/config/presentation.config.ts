@@ -41,7 +41,7 @@ export const scenes: SceneDef[] = [
   // The Boardroom never auto-advances: voting and reveals are presenter-led.
   { id: 'boardroom', act: 3, label: 'Boardroom', durationSec: 180, autoAdvance: false, exit: 'fade' },
   // Fades so Act 05 can pick the pathway nodes up exactly where they are.
-  { id: 'pathway', act: 4, label: 'Career Pathway', durationSec: 135, autoAdvance: false, exit: 'fade' },
+  { id: 'pathway', act: 4, label: 'Career Pathway', durationSec: 70, autoAdvance: true, exit: 'fade' },
   // The final screen holds until the presenter advances or restarts.
   { id: 'reveal', act: 5, label: 'IMS Reveal', durationSec: 105, autoAdvance: false, exit: 'fade' },
 ];
@@ -87,13 +87,25 @@ export const introSequence = {
 };
 
 /**
- * ACT 02 pacing. With autoplay on, the overview and each world move on by
- * themselves after these many seconds (→ skips ahead, Space holds).
- * With autoplay off, every world waits for the presenter.
+ * ACT 02 pacing. The worlds are presenter-led: each waits for →.
+ * Set autoAdvance to true to have the overview and each world move on by
+ * themselves after these many seconds instead.
  */
 export const universeTiming = {
+  autoAdvance: false,
   overviewSec: 8,
   worldSec: 13,
+};
+
+/**
+ * ACT 04 pacing. The pathway plays by itself: the opening question, each
+ * stage and the IMS beat stay on screen for stepSec seconds, then the act
+ * flows into Act 05. → skips ahead, Space holds. Set autoAdvance to false
+ * to have every stage wait for the presenter instead.
+ */
+export const pathwayTiming = {
+  autoAdvance: true,
+  stepSec: 10,
 };
 
 /** ACT 05 closing copy. */

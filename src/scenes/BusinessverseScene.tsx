@@ -12,8 +12,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
  * ACT 02 — Enter the Businessverse. Overview → five worlds → "One stream. A
- * thousand possibilities." With autoplay the worlds advance on a timer (shown
- * as a thin line on each panel); → always skips ahead and Space holds.
+ * thousand possibilities." The worlds wait for → unless universeTiming.autoAdvance
+ * is on, in which case they advance on a timer shown as a thin line on each panel.
  * Focus: 0 overview, 1–5 worlds, 6 closing.
  */
 export function BusinessverseScene(_props: { def: SceneDef }) {
@@ -22,9 +22,10 @@ export function BusinessverseScene(_props: { def: SceneDef }) {
   const { scope } = useSceneTimeline('businessverse', (tl, { reducedMotion: rm, autoplay, beats, background, onTime, hold }) => {
     const OV = universeTiming.overviewSec;
     const WS = universeTiming.worldSec;
-    /** With autoplay off, stop here and wait for the presenter. */
+    const auto = autoplay && universeTiming.autoAdvance;
+    /** Presenter-led: stop here and wait for →. */
     const wait = (at: number) => {
-      if (!autoplay) hold(at);
+      if (!auto) hold(at);
     };
     const root = scope.current!;
     const $ = (s: string) => root.querySelector(s)!;
@@ -77,7 +78,7 @@ export function BusinessverseScene(_props: { def: SceneDef }) {
         tl.fromTo(row.querySelector('.wp-career-line'), { scaleY: 0 }, { scaleY: 1, duration: 0.6 }, at + 0.1);
         sfx(tl, 'tick', at);
       });
-      if (autoplay) tl.fromTo(panel.querySelector('.wp-timer-fill'), { scaleX: 0 }, { scaleX: 1, duration: WS - 0.8, ease: 'none' }, t + 0.6);
+      if (auto) tl.fromTo(panel.querySelector('.wp-timer-fill'), { scaleX: 0 }, { scaleX: 1, duration: WS - 0.8, ease: 'none' }, t + 0.6);
       wait(t + 3.4);
     });
 

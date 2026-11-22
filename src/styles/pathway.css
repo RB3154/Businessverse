@@ -332,3 +332,9 @@
   .pw-visual-ring,
   .rv-point::after { animation: none; }
 }
+
+/* Time until the next pathway step (auto-advance only). */
+.pw-timer { display: block; width: 320px; height: 3px; margin-top: 18px; border-radius: 3px; background: rgba(245, 245, 250, 0.12); overflow: hidden; }
+.pw-timer-fill { display: block; height: 100%; background: var(--color-neon); transform-origin: left center; transform: scaleX(0); box-shadow: 0 0 10px var(--color-neon); }
+.pw-ims-timer { margin: -24px auto 0; }
+.pw-ims-timer .pw-timer-fill { background: var(--brand-ims-blue); box-shadow: 0 0 10px var(--brand-ims-blue); }

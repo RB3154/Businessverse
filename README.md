@@ -40,11 +40,11 @@ On-screen controls and the cursor hide after ~2.6 s without mouse movement; move
 ### What runs by itself and what waits for you
 
 - **Act 01** plays through and hands over to Act 02 on its own (→ skips ahead beat by beat).
-- **Act 02** plays by itself: the worlds arrive one by one, then each world is shown for 13 seconds (a thin line under its title shows time left) before the camera flies to the next. Press → to move on sooner, Space to stay on a world longer. Timings are in `universeTiming` in `presentation.config.ts`.
+- **Act 02** waits for you. The planets arrive one by one and the camera keeps drifting, but each → flies to the next world. (Set `universeTiming.autoAdvance` to `true` in `presentation.config.ts` to make the worlds move on by themselves.)
 - **Act 03 never moves on by itself.** Steps: welcome → brief → options → **countdown** → hand vote → outcome A → B → C → "No single right answer" → who makes these decisions → Continue.
   - Click **Start 15-second countdown** (or →). When it hits zero it shows *Hands up!* and **waits**; pressing → during the countdown ends it early.
   - Record the winning option by clicking its card or pressing **1 / 2 / 3**. It stays highlighted through the outcomes. No option is ever presented as the correct one.
-- **Act 04** waits on every stage.
+- **Act 04** plays by itself: the opening question, each of the five stages and the IMS beat stay on screen for 10 seconds (a thin line under the title shows time left), then it flows straight into Act 05. Press → to move on sooner, Space to hold. Change the pace with `pathwayTiming.stepSec`, or set `pathwayTiming.autoAdvance` to `false` to step through it manually.
 - **Act 05** plays through and **holds on the final screen** until you press R or close the window.
 
 ---
@@ -53,7 +53,7 @@ On-screen controls and the cursor hide after ~2.6 s without mouse movement; move
 
 | File | What it controls |
 | --- | --- |
-| `src/config/presentation.config.ts` | Scene order and durations, autoplay on/off, Act 02 pacing (`universeTiming`), audio levels, all Act 01 text, Act 05 closing messages. |
+| `src/config/presentation.config.ts` | Scene order and durations, autoplay on/off, Act 02 and Act 04 pacing (`universeTiming`, `pathwayTiming`), audio levels, all Act 01 text, Act 05 closing messages. |
 | `src/data/careerWorlds.ts` | The five career worlds: titles, quotes, careers and their plain-language explanations, colours. |
 | `src/data/businessScenario.ts` | The Boardroom: funds, the three options, countdown length, consequences, lessons, roles. |
 | `src/data/pathway.ts` | The five pathway stages (CAT/MBA wording) and the IMS connection copy. |
